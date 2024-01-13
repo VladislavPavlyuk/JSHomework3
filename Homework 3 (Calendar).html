@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        h1 {
+            color : blue;
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+            margin:auto; 
+        }
+
+        td{
+            border: solid gray  ;
+            font-size: xx-large;
+            font-style: normal;
+            width: 5rem;
+            height: 5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        let days = [ "Вс","Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+        let months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        let season = new Array("seasons/1.jpg", "seasons/2.jpg", "seasons/3.jpg", "seasons/4.jpg");
+
+        function checkMonth(dateTemp,myDate){
+            
+            if (dateTemp.getMonth() == myDate.getMonth())
+
+            return true;
+        }
+        
+        function checkWeekend(dateTemp){
+
+            if ((dateTemp.getDay()==0)||(dateTemp.getDay()==6))
+
+            return true;
+        }
+        
+        function getSeason(myDate){
+            month = myDate.getMonth();
+            switch (month)
+            {
+                case  11:
+                    s = 0;
+                    break;
+
+                case  0:
+                    s = 0;
+                break;
+
+                case  1:
+                    s = 0;
+                    break;
+
+                case  2:
+                    s = 1;
+                    break;
+
+                case  3:
+                    s = 1;
+                    break;
+
+                case  4:
+                    s = 1;
+                    break;
+
+                case  5:
+                    s = 2;
+                    break;
+                    
+                case  6:
+                    s = 2;
+                    break;
+
+                case  7:
+                    s = 2;
+                    break;
+
+                case  8:
+                    s = 3;
+                    break;
+
+                case  9:
+                    s = 3;
+                    break;
+                    
+                case  10:
+                    s = 3;
+                    break;
+
+                default:
+
+                    break;
+            }
+
+            return season[s];
+        }
+        
+        function getNext(dateTemp)
+        {
+            dateNext = new Date();
+            month = dateTemp.getMonth()
+            dateNext.setMonth(month);
+            dateNext.setYear(dateTemp.getFullYear());
+            dateNext.setDate(dateTemp.getDate() + 1);
+            return dateNext;
+        }
+
+        function getFirst(myDate)
+        {
+            let d = 1;
+            dayFirst = new Date();
+            dayFirst.setMonth(myDate.getMonth());
+            dayFirst.setYear(myDate.getFullYear());
+            dayFirst.setDate(d);
+        
+            if (dayFirst.getDay() != 1){
+                d--;
+                dayFirst.setDate(d);
+            }
+         
+            while (dayFirst.getDay() != 1)
+            {
+                d = dayFirst.getDate();
+                d--;
+                dayFirst.setDate(d);
+
+            }
+
+            return dayFirst;
+        }
+
+        function getLines(myDate)
+        {
+            let lines = 0;
+
+            checkDate = getFirst(myDate); 
+
+            month = myDate.getMonth();
+            month++;
+
+            monthNext = new Date();
+            monthNext.setMonth(month);
+            monthNext.setYear(myDate.getFullYear());
+            monthNext.setDate(1);
+
+            let x = (monthNext - checkDate) / 24 / 3600 / 1000;
+
+            lines = x / 7;
+
+            return lines;
+        }
+
+        function inputDate(){
+
+            var currentDate = new Date(); 
+
+            myDate = new Date();      
+            myDate.setDate(prompt("Введите пожалуйста день : ", currentDate.getDate()));
+            myDate.setMonth(prompt("Введите пожалуйста месяц : ", currentDate.getMonth()));
+            myDate.setYear(prompt("Введите пожалуйста год : ", currentDate.getFullYear()));    
+            
+            return myDate;
+        }
+
+        function getFulldate(myDate){
+
+            fullDate = myDate.getDate() + " " + months[myDate.getMonth()] + " " + myDate.getFullYear() + ", " + days[myDate.getDay()];
+
+            return fullDate;
+        }
+        
+        function showDate(anyDate){
+
+            alert(anyDate);
+        }
+        
+        function showLines(myDate){
+
+            alert(getLines(myDate));
+
+        }
+
+        myDate = inputDate();
+
+        fullDate = getFulldate(myDate);
+
+        showDate(fullDate);
+        
+        dateFirst = getFirst(myDate);
+
+        document.write("<h1>" + months[myDate.getMonth()] + "</h1>");
+
+        document.write("<table>");
+
+        document.write("<thead style='font-weight: bold'>");
+        
+        dateTemp = dateFirst;
+
+            for (j = 0; j < 7; j++)
+            { 
+                if  (checkWeekend(dateTemp))
+                {
+                    document.write("<td style='color:red; background:brown'>" + days[j] + "</td>");
+                } else {
+                    document.write("<td style='color:brown; background:orange'>" + days[j] + "</td>"); 
+                }
+                dateTemp = getNext(dateTemp);
+            }
+
+        document.write("</thead>");
+
+        document.write("<tbody style = 'background-image: URL(" + getSeason(myDate) + "'>");
+
+            dateTemp = dateFirst;
+
+            for (j = 0; j < getLines(myDate); j++)
+            { 
+            document.write("<tr>");
+
+                for (i = 0; i < 7; i++)
+                { 
+                    d = dateTemp.getDate();
+
+                    if ((dateTemp.getMonth() == myDate.getMonth()) && (dateTemp.getDate() == myDate.getDate()))
+                    {
+                        color = "black";
+                        font_weight = "bold";
+                        background = "yellow";
+                    } else {
+
+                        if (checkMonth(dateTemp,myDate))
+                        {
+                            if  (checkWeekend(dateTemp))
+                            {
+                                color = "red";
+                                font_weight = "bold";
+                                background = "transparent";
+                            } else 
+                            {      
+                                color = "bold";
+                                font_weight = "bold"; 
+                                background = "transparent";                 
+                            }                        
+                        } else {                        
+                            if (checkWeekend(dateTemp))
+                            {
+                                color = "red";
+                                font_weight = "normal";
+                                background = "transparent";
+                            } else 
+                            {
+                                color = "gray";
+                                font_weight = "normal";
+                                background = "transparent";
+                            }                         
+                        } 
+                        }
+
+                    document.write("<td style='background:" + background + "; color:" + color + "; font-weight:" + font_weight + "'>" + d + "</td>")
+
+                    dateTemp = getNext(dateTemp);
+                }
+            
+                document.write("</tr>"); 
+            }
+        document.write("</tbody>");
+        document.write("</table> ");
+    </script>
+</body>
+</html>
